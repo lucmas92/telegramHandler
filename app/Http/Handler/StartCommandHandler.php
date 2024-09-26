@@ -12,6 +12,7 @@ class StartCommandHandler extends CommandHandler
         $keyboard = ReplyKeyboard::make()
             ->button('/ral')
             ->button('/start')
+            ->button('/events')
             ->button('/test')
             ->button('Start WebApp')->webApp('https://breakingitaly.it/');
 
