@@ -13,7 +13,8 @@ class EventsCommandHandler extends CommandHandler
     {
         if (!Cache::has('csrftoken')) {
             Log::debug("Ricavo csrftoken");
-            $response = Http::get('https://www.eventbrite.it/');
+            $response = Http::withHeader('User-agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36')
+                ->get('https://www.eventbrite.it/');
             Log::debug($response->ok());
             $csrftoken = $response->cookies()->getCookieByName('csrftoken')->getValue();
             Cache::set('csrftoken', $csrftoken);
