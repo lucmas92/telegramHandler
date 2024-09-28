@@ -2,7 +2,6 @@
 
 namespace App\Http\Handler;
 
-use DefStudio\Telegraph\Keyboard\ReplyKeyboard;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;

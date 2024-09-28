@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Symfony\Component\DomCrawler\Crawler;
 
 class RalCommandHandler extends CommandHandler
@@ -43,6 +44,7 @@ class RalCommandHandler extends CommandHandler
             Cache::set($key, $message, 1800);
         }
         $message = Cache::get($key);
+        Log::debug("Message sent: " . $message);
 
         $this->chat->html($message)->send();
     }
@@ -167,7 +169,9 @@ class RalCommandHandler extends CommandHandler
             $this->login();
         }
         $cookies = Cache::get('ziveriCookies');
-        $response = Http::withCookies($cookies, "my.studioziveri.it")->get($url);
+        $response = Http::withHeader('User-agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36')
+            ->withCookies($cookies, "my.studioziveri.it")
+            ->get($url);
         if (!$response->ok()) {
             if ($this->currentRetry >= $this->maxRetries) {
                 Log::error(__METHOD__ . "maxRetries exceeded");
@@ -179,6 +183,16 @@ class RalCommandHandler extends CommandHandler
             $this->{$method}();
         }
         Log::debug($url . ' - ' . $response->status());
+        $body = $response->body();
+        if (Str::contains($body, 'Nessuna azienda selezionata')){
+            if ($this->currentRetry >= $this->maxRetries) {
+                Log::error(__METHOD__ . "maxRetries exceeded");
+                throw new Exception(__METHOD__ . "maxRetries exceeded");
+            }
+            $this->currentRetry++;
+            $this->login();
+            return $this->getPage($url, $method);
+        }
         return $response->body();
     }
 
