@@ -14,6 +14,7 @@ class StartCommandHandler extends CommandHandler
             ->button('/start')
             ->button('/events')
             ->button('/test')
+            ->button('/onTv')
             ->button('Start WebApp')->webApp('https://breakingitaly.it/');
 
             $this->chat->html(__('telegraph::' . __METHOD__))
