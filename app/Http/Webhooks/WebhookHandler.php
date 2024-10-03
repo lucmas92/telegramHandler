@@ -58,6 +58,7 @@ class WebhookHandler extends \DefStudio\Telegraph\Handlers\WebhookHandler
     protected function canHandle(string $action): bool
     {
         $classHandler = 'App\Http\Handler\\' . ucfirst(strtolower($action)) . 'CommandHandler';
+        Log::debug("Class handler: " . $classHandler);
         $class_exists = class_exists($classHandler);
         if ($class_exists) {
             $this->classHandler = App::make($classHandler, ['chat' => $this->chat]);
