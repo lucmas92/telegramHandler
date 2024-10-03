@@ -5,7 +5,7 @@ namespace App\Http\Handler;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 
-class OnTvCommandHandler extends CommandHandler
+class OntvCommandHandler extends CommandHandler
 {
     public function handle(): void
     {
